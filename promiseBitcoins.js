@@ -7,11 +7,11 @@ const response = await axios('https://api.coindesk.com/v1/bpi/currentprice.json'
 const data = await response;
 let BitcoinList = "";
 
-data.forEach(bitcoin=>{
+Array.from(data).forEach(bitcoin=>{
     BitcoinList += `${bitcoin['time']}, ${bitcoin['chartName']}, ${bitcoin['updated']}\n`;
 });
 //crear archivo
-fs.writeFile('bitcoinprice.txt',BitcoinList, (error)=>{
+fs.writeFile('bitcoinprice.csv',BitcoinList, (error)=>{
   if(error){
       return;
   }

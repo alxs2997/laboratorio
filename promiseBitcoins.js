@@ -1,36 +1,31 @@
 const axios = require('axios');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 async function getBitcoins() {
-    try{
-const response = await axios('https://api.coindesk.com/v1/bpi/currentprice.json');
-const data = await response;
-let BitcoinList = "";
+    try {
+        const response = await axios('https://api.coindesk.com/v1/bpi/currentprice.json');
+        const data = await response;
+        let BitcoinList = "";
+       
+        //console.log(data.data.chartName);
+            dd = data.data;
 
-Array.from(data).forEach(bitcoin=>{
-    BitcoinList += `${bitcoin['time']}, ${bitcoin['chartName']}, ${bitcoin['updated']}\n`;
-});
-//crear archivo
-fs.writeFile('bitcoinprice.csv',BitcoinList, (error)=>{
-  if(error){
-      return;
-  }
-  console.log('se ha creado un archivo'); 
-})
-}catch(error){
-    console.log(error)
-}
+            Object.entries(dd.bpi).forEach(bitcoin => {
+            BitcoinList += `${bitcoin[1].code}, ${bitcoin[1].rate}\n`;
+           //console.log(bitcoin);
+        });
+        //console.log(BitcoinList)
+        //crear archivo
+        fs.writeFile('bitcoinprice.csv', BitcoinList, (error) => {
+            if (error) {
+                console.log(response);
+                return;
+            }
+            console.log('se ha creado un archivo');
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 getBitcoins();
-
-/*axios.get(url, data)
-.then((response) => {
-    console.log(response.data);
-    response.data.foreach(bitcoin=>{
-        BitcoinPrice +=`${bitcoin['time']}, ${bitcoin['updated']}\n`;
-    });
-})
-/*.then(()=>{
-    console.log('Tu lista bitcoins ha sido guardada como promiseBitcoins.csv')
-})*/
